@@ -10,3 +10,8 @@ Sistema que baixa os pdfs do site www.coronavirus.sc.gov.br e le os dados para e
 ## Modo de usar
 
 A maneira mais fácil é executar o `run.sh`
+
+
+## Apoio
+
+- [LABMAC - UFSC Blumenau](https://labmac.mat.blumenau.ufsc.br/)
