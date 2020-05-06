@@ -1,13 +1,22 @@
 from glob import glob
 from os.path import getmtime
-import os
+import os, sys, shutil
 
-def convert_loop():
-    lista_pdfs = sorted(glob("*.pdf"), key=getmtime)
+def convert_loop(verbose=False):
+    lista_pdfs = sorted(glob("./pdf/*.pdf"), key=getmtime)
     for arquivo in lista_pdfs:
-        comando = f"pdftotext {arquivo}"
-        print(f"Convertendo {arquivo}")
+        txt_path = arquivo.replace("pdf", "txt", 2)
+        comando = f"pdftotext {arquivo} {txt_path}"
+        if verbose:
+            print(f"Convertendo {arquivo}")
         os.system(comando)
 
+
 if __name__ == "__main__":
-    convert_loop()
+    verbose = "-v" in sys.argv or "--verbose" in sys.argv
+    clear = "-c" in sys.argv or "--clear" in sys.argv
+    if clear:
+        print("Limpando o diretório ./txt/")
+        shutil.rmtree("./txt/")
+    os.makedirs("txt", exist_ok=True)
+    convert_loop(verbose)

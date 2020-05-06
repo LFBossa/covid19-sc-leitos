@@ -14,7 +14,7 @@ def dict_files(wildcard):
     return dicionario
 
 if __name__ == "__main__":
-    dicionario = dict_files("*.txt")
+    dicionario = dict_files("./txt/*.txt")
     for key, val in dicionario.items():
         if "LEITOS" in val:
             print(f"Leitos in {key}")
