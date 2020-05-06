@@ -1,0 +1,374 @@
+4 de maio de 2020
+
+4 de maio de 2020
+
+3.571.615
+
+105.222
+
+2.623
+
+casos conﬁrmados
+
+casos conﬁrmados
+
+casos conﬁrmados
+
+óbitos
+
+óbitos
+
+óbitos
+
+250.134
+
+7.288
+
+55
+
+EVOLUÇÃO DOS CASOS CONFIRMADOS EM SANTA CATARINA
+
+Casos confirmados conforme a data do início dos sintomas
+
+EVOLUÇÃO DOS ÓBITOS EM SANTA CATARINA
+
+TESTES - LACEN
+
+11.746
+
+exames
+processados
+
+72
+
+exames
+aguardando
+resultado
+Data do óbito
+
+2
+
+4 de maio de 2020
+DETALHAMENTO DOS CASOS CONFIRMADOS E ÓBITOS
+
+ÓBITOS POR MUNICÍPIO E MACRORREGIÃO DE SAÚDE
+GRANDE FLORIANÓPOLIS - 12
+- Antônio Carlos - 4
+- Florianópolis - 6
+- Palhoça - 1
+- São José - 1
+FOZ DO RIO ITAJAÍ - 11
+- Balneário Camboriú - 2
+- Camboriú - 3
+- Itajaí - 3
+- Itapema - 1
+- Penha - 1
+- Porto Belo - 1
+
+SUL - 16
+- Balneário Arroio do Silva - 1
+- Balneário Gaivota - 1
+- Braço do Norte - 2
+- Cocal do Sul - 1
+- Criciúma - 4
+- Pedras Grandes - 1
+- São Ludgero - 1
+- Sombrio - 1
+- Tubarão - 3
+- Urussanga - 1
+
+PLANALTO NORTE E NORDESTE - 9
+- Jaraguá do Sul - 1
+- Joinville - 6
+- Massaranduba - 1
+- São Francisco do Sul - 1
+ALTO VALE DO ITAJAÍ - 4
+- Gaspar - 1
+- Indaial - 1
+- Ituporanga - 1
+- Pouso Redondo - 1
+MEIO OESTE E SERRA CATARINENSE - 3
+- Concórdia - 2
+- Tangará - 1
+
+3
+
+4 de maio de 2020
+CASOS CONFIRMADOS POR MUNICÍPIO E MACRORREGIÃO DE SAÚDE
+
+4
+
+4 de maio de 2020
+DISTRIBUIÇÃO DE CASOS POR MUNICÍPIO
+
+142
+
+municípios com
+casos conﬁrmados
+
+DISTRIBUIÇÃO DE ÓBITOS POR MUNICÍPIO
+
+30
+
+municípios com
+óbitos registrados
+
+5
+
+4 de maio de 2020
+CASOS CONFIRMADOS POR MACRORREGIÃO DE SAÚDE
+
+263
+
+Planalto Norte
+e Nordeste
+
+213
+
+377
+
+Grande Oeste
+
+320
+
+Alto Vale
+do Itajaí
+
+Meio Oeste e
+Serra Catarinense
+
+18
+
+384
+
+Foz do
+Rio Itajaí
+
+503
+
+Grande
+
+Florianópolis
+
+Outros estados
+
+3
+
+542
+
+Outros países
+
+Sul
+
+ÓBITOS POR MACRORREGIÃO DE SAÚDE
+
+9
+
+Planalto Norte
+e Nordeste
+
+0
+
+11
+
+4
+
+Grande Oeste
+
+3
+
+Alto Vale
+do Itajaí
+
+Foz do
+Rio Itajaí
+
+12
+
+Meio Oeste e
+Serra Catarinense
+
+Grande
+
+Florianópolis
+
+16
+Sul
+
+6
+
+4 de maio de 2020
+OCUPAÇÃO DE LEITOS DE UTI (SUS E REDE PRIVADA)
+SUS
+
+REDE PRIVADA
+
+TOTAL
+
+Conﬁrmados
+
+Suspeitos
+
+Total
+
+Conﬁrmados
+
+Suspeitos
+
+Total
+
+Conﬁrmados
+
+Suspeitos
+
+TOTAL
+
+Internações
+em UTI
+
+41
+
+42
+
+83
+
+19
+
+10
+
+29
+
+60
+
+52
+
+112
+
+Ventilação
+mecânica
+
+24
+
+25
+
+49
+
+10
+
+6
+
+16
+
+34
+
+31
+
+65
+
+Altas da UTI
+para enfermaria
+
+41
+
+86
+
+127
+
+45
+
+43
+
+88
+
+86
+
+129
+
+215
+
+OCUPAÇÃO DE LEITOS DE UTI - SUS
+
+83
+ocupados
+
+498
+leitos
+reservados à
+Covid-19
+
+16,7%
+taxa de ocupação
+
+415
+disponíveis
+
+7
+
+4 de maio de 2020
+NOTAS EXPLICATIVAS
+
+1 - Nos últimos boletins, os gráﬁcos de evolução dos casos
+conﬁrmados e de óbitos em Santa Catarina representavam a data
+da liberação dos resultados laboratoriais.
+A partir de 20 de abril de 2020, os boletins passam a representar
+dados que melhor apresentem a situação da COVID-19 no Estado,
+permitindo identiﬁcar com maior precisão o momento da
+infecção pelo vírus SARS-CoV-2.
+Dessa forma, o gráﬁco que representa a curva epidêmica, ou seja,
+a evolução de casos conﬁrmados, será de acordo com a data do
+início dos sintomas, e o gráﬁco de evolução dos óbitos
+conﬁrmados apresentará de acordo com a data do óbito.
+2 - A partir de 4 de maio de 2020, o painel BoaVista do Governo de
+Santa Catarina passou a integrar os sistemas do Ministério da
+Saúde, sendo eles: e-SUS VE e SIVEP Gripe, e assim os casos
+conﬁrmados por teste rápido sorológico e os casos conﬁrmados
+por critério clínico e vínculo epidemiológico passaram a ser
+contabilizados.
+3 - O painel do Governo de Santa Catarina, BoaVista, integra
+diversos sistemas para contabilizar o número de casos de
+COVID-19, como o Sistema de Laboratório, o e-SUS VE e SIVEP
+Gripe. Desta forma, a diminuição de 290 casos de coronavírus no
+boletim divulgado nesta sexta-feira, 1º, ocorreu devido ao registro
+de casos em duplicidade. A Secretaria de Estado da Saúde
+trabalha para que todas essas inconsistências sejam corrigidas o
+mais breve possível. E conta com a colaboração dos notiﬁcadores
+dos sistemas supracitados, para que tenham atenção no
+preenchimento das informações.
+
+8
+
+4 de maio de 2020
+FONTES
+
+BRASIL. Ministério da Saúde. Painel Coronavírus. Disponível em:
+https://covid.saude.gov.br/. Acesso em: 4 maio 2020, 17h11.
+JOHN HOPKINS UNIVERSITY. Coronavirus Resource Center. 2020.
+Disponível em: https://coronavirus.jhu.edu/. Acesso em: 4 maio
+2020, 17h16.
+SANTA CATARINA. Centro de Informática e Automação do Estado
+de Santa Catarina - CIASC. Plataforma BoaVista, com dados da
+Secretaria de Estado da Saúde. Acesso em: 4 maio 2020, 19h00.
+SANTA
+CATARINA.
+Secretaria
+de
+Estado
+da
+Saúde,
+Superintendência de Serviços Especializados e Regulação. Acesso
+em: 4 maio 2020, 16h54.
+
+9
+
+Links úteis
+www.coronavirus.sc.gov.br
+Boletins epidemiológicos
+Guia de convívio responsável
+Tira dúvidas
+Triagem online
+Legislação relacionada à Covid-19
+
+Clique e conecte-se
+ao Governo de SC
+
+
