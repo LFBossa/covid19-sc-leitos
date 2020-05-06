@@ -23,7 +23,13 @@ def extract_2level_regex(pattern, text):
     match = regex.search(pattern, text)
     if match:
         return match.captures(2)
- 
+
+def extract_regex(pattern, text):
+    match = regex.search(pattern, text)
+    if match:
+        # retorna o primeiro grupo de captura
+        return match.captures(1)[0]
+
 def captura_internacoes(texto):
     patt = r"Internações\nem UTI\n(\n(\d+)\n){9}"
     return extract_2level_regex(patt, texto)
@@ -90,18 +96,29 @@ def get_uti_data(text):
             }
     return dicionario
 
-"""
+
 def get_leitos_sus(texto):
-    ocupados =
-    reservados
-    disponiveis"""
+    ocupados = int(extract_regex(r"(\d+)\nocupados", texto))
+    reservados = int(extract_regex(r"(\d+)\nleitos\nreservados", texto))
+    disponiveis = int(extract_regex(r"(\d+)\ndisponíveis", texto))
+    if ocupados + disponiveis == reservados:
+        return {"ocupados": ocupados, "reservados": reservados, "disponiveis": disponiveis}
+    else:
+        return "erro"
+
+def get_testes(texto):
+    testes_lacen = extract_regex(r"(\d+[\.\d{3}]*)\n\nexames", texto)
+    return testes_lacen
 
 
 def extraction_loop(verbose=False):
     dicionario = dict_files("./txt/*.txt")
     for caminho, conteudo in dicionario.items():
         if "Internações" in conteudo:
-            conteudo_json = get_uti_data(conteudo)
+            conteudo_json = {
+                "leitos_SUS": get_leitos_sus(conteudo),
+                 "UTI":  get_uti_data(conteudo),
+                 "testes": get_testes(conteudo)}
             json_path = caminho.replace("txt", "json", 2)
             if verbose:
                 print(f"Encontrados dados em {caminho}. Extraindo para {json_path}")
