@@ -87,12 +87,14 @@ def get_uti_data(text):
         else:
             # deu bom
             dicionario[chave] = {
-                "sus":
-                    {"confirmado": dados[0],
-                    "suspeito": dados[1]},
-                "privado":
-                    {"confirmado": dados[3],
-                    "suspeito": dados[4]}
+                "confirmado": {
+                    "sus": dados[0],
+                    "privado": dados[3]
+                }, 
+                "suspeito": {
+                    "sus": dados[1],
+                    "privado": dados[4]
+                }
             }
     return dicionario
 
@@ -108,6 +110,7 @@ def get_leitos_sus(texto):
 
 def get_testes(texto):
     testes_lacen = extract_regex(r"(\d+[\.\d{3}]*)\n\nexames", texto)
+    testes_lacen = int(testes_lacen.replace(".",""))
     return testes_lacen
 
 
