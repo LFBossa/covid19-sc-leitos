@@ -1,7 +1,9 @@
 /pdf/
 /txt/
 /json/
+/jpeg/
 /.vscode/
 /__pycache__/
 *.ipynb
 /.ipynb_checkpoints/
+Pipfile.lock
