@@ -77,7 +77,7 @@ def converte_testa_dados(array):
 def get_uti_data(text):
     sequencia_extracoes = [ ("internacoes", captura_internacoes ),
                             ("ventilacao", captura_ventilacao ),
-                            ("altas_para_enfermaria", captura_altas ) ]
+                            ("altas_enfermaria", captura_altas ) ]
     dicionario = dict()
     for chave, function in sequencia_extracoes:
         dados = converte_testa_dados(function(text))
@@ -87,13 +87,13 @@ def get_uti_data(text):
         else:
             # deu bom
             dicionario[chave] = {
-                "confirmado": {
+                "conf": {
                     "sus": dados[0],
-                    "privado": dados[3]
+                    "priv": dados[3]
                 }, 
-                "suspeito": {
+                "susp": {
                     "sus": dados[1],
-                    "privado": dados[4]
+                    "priv": dados[4]
                 }
             }
     return dicionario
@@ -117,6 +117,7 @@ def get_testes(texto):
 def extraction_loop(verbose=False):
     dicionario = dict_files("./txt/*.txt")
     for caminho, conteudo in dicionario.items():
+        
         if "Internações" in conteudo:
             conteudo_json = {
                 "leitos_SUS": get_leitos_sus(conteudo),
@@ -125,8 +126,8 @@ def extraction_loop(verbose=False):
             json_path = caminho.replace("txt", "json", 2)
             if verbose:
                 print(f"Encontrados dados em {caminho}. Extraindo para {json_path}")
-            with open(json_path, "w") as fp:
-                json.dump(conteudo_json, fp, ensure_ascii=False, indent=2)
+        with open(json_path, "w") as fp:
+            json.dump(conteudo_json, fp, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":

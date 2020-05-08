@@ -19,4 +19,4 @@ if __name__ == "__main__":
         print("Limpando o diretório ./txt/")
         shutil.rmtree("./txt/")
     os.makedirs("txt", exist_ok=True)
-    convert_loop(verbose)
+    convert_loop(True)

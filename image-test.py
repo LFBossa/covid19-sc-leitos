@@ -36,6 +36,7 @@ def extract_save_images(pdf_path):
 
 def main_loop():
     for x in ls("./pdf/*.pdf"):
+        
         print(x)
         extract_save_images(x)
 
