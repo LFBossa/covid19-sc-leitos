@@ -1,6 +1,7 @@
-python3 downloader.py --verbose
-python3 converter.py --verbose
-python3 extract.py --verbose
-python3 createcsv.py --verbose
+pipenv shell
+python downloader.py --verbose
+python converter.py --verbose
+python extract.py --verbose
+python createcsv.py --verbose
 # sudo apt-get install tesseract-ocr-por tesseract-ocr
 
