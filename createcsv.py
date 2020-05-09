@@ -35,6 +35,7 @@ def generate_table(verbose=False):
 @click.option(
     "-o",
     "--output",
+    type=click.Path(),
     default="dados-consolidados.csv",
     help="Caminho para o arquivo csv",
 )
@@ -54,7 +55,7 @@ def json_to_csv(output, verbose):
     taxa_ocupacao = df["leitos_SUS_ocupados"]/df["leitos_SUS_disponiveis"]
     df.insert(6, "taxa_ocupacao", taxa_ocupacao)
     if verbose:
-        print("Salvando dados-consolidados.csv")
+        print(f"Salvando {output}")
     df.to_csv(output)
 
 
