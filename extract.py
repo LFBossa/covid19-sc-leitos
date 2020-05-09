@@ -1,11 +1,14 @@
-from glob import glob
-from os.path import getmtime
-import regex
 import json
-from functools import reduce
-import sys
 import os
 import shutil
+from functools import reduce
+from glob import glob
+from os.path import getmtime
+
+import click
+import regex
+
+from cli import common_options
 
 
 def ls(wildcard):
@@ -65,10 +68,11 @@ def converte_testa_dados(array):
      """
     arrn = [int(x) for x in array]
     # testamos se a soma das categorias correspondentes está correta
-    teste_colunas = [arrn[0+x] + arrn[3+x] == arrn[6+x] for x in range(3)]
+    teste_colunas = [arrn[0 + x] + arrn[3 + x] == arrn[6 + x] for x in range(3)]
     # testamos se a soma em cada subcategoria está correta
-    teste_subcolunas = [arrn[3*x+0] + arrn[3*x+1]
-                        == arrn[3*x+2] for x in range(3)]
+    teste_subcolunas = [
+        arrn[3 * x + 0] + arrn[3 * x + 1] == arrn[3 * x + 2] for x in range(3)
+    ]
     colunas_ok = reduce(lambda x, y: x and y, teste_colunas)
     subcolunas_ok = reduce(lambda x, y: x and y, teste_subcolunas)
     erros_colunas = ["confirmados", "suspeitos", "total"]
@@ -87,9 +91,11 @@ def converte_testa_dados(array):
 
 
 def get_uti_data(text):
-    sequencia_extracoes = [("internacoes", captura_internacoes),
-                           ("ventilacao", captura_ventilacao),
-                           ("altas_enfermaria", captura_altas)]
+    sequencia_extracoes = [
+        ("internacoes", captura_internacoes),
+        ("ventilacao", captura_ventilacao),
+        ("altas_enfermaria", captura_altas),
+    ]
     dicionario = dict()
     for chave, function in sequencia_extracoes:
         dados = converte_testa_dados(function(text))
@@ -99,16 +105,8 @@ def get_uti_data(text):
         else:
             # deu bom
             dicionario[chave] = {
-                "conf": {
-                    "sus": dados[0],
-                    "priv": dados[3],
-                    "total": dados[6]
-                },
-                "susp": {
-                    "sus": dados[1],
-                    "priv": dados[4],
-                    "total": dados[7]
-                }
+                "conf": {"sus": dados[0], "priv": dados[3], "total": dados[6]},
+                "susp": {"sus": dados[1], "priv": dados[4], "total": dados[7]},
             }
     return dicionario
 
@@ -118,7 +116,11 @@ def get_leitos_sus(texto):
     reservados = int(extract_regex(r"(\d+)\nleitos\nreservados", texto))
     disponiveis = int(extract_regex(r"(\d+)\ndisponíveis", texto))
     if ocupados + disponiveis == reservados:
-        return {"ocupados": ocupados, "reservados": reservados, "disponiveis": disponiveis}
+        return {
+            "ocupados": ocupados,
+            "reservados": reservados,
+            "disponiveis": disponiveis,
+        }
     else:
         return "erro"
 
@@ -150,46 +152,40 @@ def get_testes_aguardando(texto):
     return int(testes_aguardando)
 
 
-def extraction_loop(verbose=False):
+def create_directory(clear):
+    if clear:
+        print("Limpando o diretório ./json/")
+        shutil.rmtree("./json/")
+    os.makedirs("json", exist_ok=True)
+
+
+@click.command()
+@common_options
+def extraction_loop(clear, verbose):
+    create_directory(clear)
     dicionario = dict_files("./txt/*.txt")
     for caminho, conteudo in dicionario.items():
         confirmados = get_confirmados(conteudo)
         num_testes, tipo_testes = get_testes(conteudo)
         aguardando = get_testes_aguardando(conteudo)
         obitos = get_obitos(conteudo)
-        conteudo_json = {"casos_conf": confirmados,
-                         "obitos": obitos,
-                         "testes": num_testes,
-                         "teste_tipo": tipo_testes,
-                         "testes_aguardando": aguardando}
+        conteudo_json = {
+            "casos_conf": confirmados,
+            "obitos": obitos,
+            "testes": num_testes,
+            "teste_tipo": tipo_testes,
+            "testes_aguardando": aguardando,
+        }
         if "Internações" in conteudo:
-            conteudo_json.update({
-                "leitos_SUS": get_leitos_sus(conteudo),
-                "UTI":  get_uti_data(conteudo),
-            })
+            conteudo_json.update(
+                {"leitos_SUS": get_leitos_sus(conteudo), "UTI": get_uti_data(conteudo),}
+            )
         json_path = caminho.replace("txt", "json", 2)
         if verbose:
-            print(
-                f"Encontrados dados em {caminho}. Extraindo para {json_path}")
+            print(f"Encontrados dados em {caminho}. Extraindo para {json_path}")
         with open(json_path, "w") as fp:
             json.dump(conteudo_json, fp, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
-    verbose = "-v" in sys.argv or "--verbose" in sys.argv
-    clear = "-c" in sys.argv or "--clear" in sys.argv
-    if clear:
-        print("Limpando o diretório ./json/")
-        shutil.rmtree("./json/")
-    os.makedirs("json", exist_ok=True)
-    extraction_loop(verbose)
-
-
-# if __name__ == "__main__":
-#     dicionario = dict_files("./txt/*.txt")
-#     for caminho, conteudo in dicionario.items():
-#         print(caminho, "\n", end="\t")
-#         for y in ["aguardando", "MACRORREGIÃO", "SUS", "leitos", "CASOS CONFIRMADOS POR MACRORREGIÃO DE SAÚDE"]:
-#             if y in conteudo:
-#                 print(y, end=" ")
-#         print(f"testes aguardando {a}")
+    extraction_loop()
