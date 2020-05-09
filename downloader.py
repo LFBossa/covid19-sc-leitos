@@ -6,6 +6,7 @@ from urllib.request import urlretrieve
 import click
 
 from cli import common_options
+from utils import create_directory
 
 
 def get_link_from_isostring(date):
@@ -26,17 +27,10 @@ def download_if_inexistent(date):
         return f"Baixando relatório do dia {date_br}"
 
 
-def create_directory(clear):
-    if clear:
-        print("Limpando o diretório ./pdf/")
-        shutil.rmtree("./pdf/")
-    os.makedirs("pdf", exist_ok=True)
-
-
 @click.command()
 @common_options
 def download_loop(clear, verbose):
-    create_directory(clear)
+    create_directory("pdf", clear)
 
     INICIO = dt.date(2020, 4, 14)
     numero_dias = (INICIO.today() - INICIO).days

@@ -1,6 +1,4 @@
 import json
-import os
-import shutil
 from functools import reduce
 from glob import glob
 from os.path import getmtime
@@ -9,6 +7,7 @@ import click
 import regex
 
 from cli import common_options
+from utils import create_directory
 
 
 def ls(wildcard):
@@ -152,17 +151,10 @@ def get_testes_aguardando(texto):
     return int(testes_aguardando)
 
 
-def create_directory(clear):
-    if clear:
-        print("Limpando o diretório ./json/")
-        shutil.rmtree("./json/")
-    os.makedirs("json", exist_ok=True)
-
-
 @click.command()
 @common_options
 def extraction_loop(clear, verbose):
-    create_directory(clear)
+    create_directory("json", clear)
     dicionario = dict_files("./txt/*.txt")
     for caminho, conteudo in dicionario.items():
         confirmados = get_confirmados(conteudo)
