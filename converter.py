@@ -1,8 +1,17 @@
+import os
 from glob import glob
 from os.path import getmtime
-import os, sys, shutil
 
-def convert_loop(verbose=False):
+import click
+
+from cli import common_options
+from utils import create_directory
+
+
+@click.command()
+@common_options
+def convert_loop(clear, verbose):
+    create_directory("txt", clear)
     lista_pdfs = sorted(glob("./pdf/*.pdf"), key=getmtime)
     for arquivo in lista_pdfs:
         txt_path = arquivo.replace("pdf", "txt", 2)
@@ -13,10 +22,4 @@ def convert_loop(verbose=False):
 
 
 if __name__ == "__main__":
-    verbose = "-v" in sys.argv or "--verbose" in sys.argv
-    clear = "-c" in sys.argv or "--clear" in sys.argv
-    if clear:
-        print("Limpando o diretório ./txt/")
-        shutil.rmtree("./txt/")
-    os.makedirs("txt", exist_ok=True)
-    convert_loop(True)
+    convert_loop()

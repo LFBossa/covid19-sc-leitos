@@ -1,8 +1,10 @@
-from PIL import Image
-import pytesseract as ocr
-from PyPDF2 import PdfFileReader
 import io
+
+from PIL import Image
+
+import pytesseract as ocr
 from extract import ls
+from PyPDF2 import PdfFileReader
 
 
 def extract_save_images(pdf_path):
@@ -13,11 +15,13 @@ def extract_save_images(pdf_path):
     # pegamos os objetos
     xobjects = pagina["/Resources"]["/XObject"]
     # isso aqui foi descoberto na mão
-    heuristica = {'Casos confirmados por sexo': 'sexo.confirmados',
-                  'Obitos por sexo': 'sexo.obitos',
-                  'Obitos por faixa etaria': 'histograma.obitos',
-                  'Casos por faixa etaria': 'histograma.confirmados'}
-    
+    heuristica = {
+        "Casos confirmados por sexo": "sexo.confirmados",
+        "Obitos por sexo": "sexo.obitos",
+        "Obitos por faixa etaria": "histograma.obitos",
+        "Casos por faixa etaria": "histograma.confirmados",
+    }
+
     for key, val in xobjects.items():
         objeto = val.getObject()
         img = Image.open(io.BytesIO(objeto._data))
@@ -28,15 +32,16 @@ def extract_save_images(pdf_path):
                 img.save(f"./jpeg/{data_iso}_{heuristica[tag]}.jpeg", "JPEG")
                 continue
 
+
 # Heurística
 # /Image12 - Casos por faixa etária
 # /Image13 - Confirmados por sexo
 # /Image14 - Mortes por sexo
 # /Image16 - Obitos por faixa etaria
 
+
 def main_loop():
     for x in ls("./pdf/*.pdf"):
-        
         print(x)
         extract_save_images(x)
 
