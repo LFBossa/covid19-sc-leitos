@@ -26,7 +26,7 @@ def generate_table(verbose=False):
         dic = json.loads(val)  # convertemos em dicionário do python
         data = key.strip("./json")
         registry = {"data": data}
-        registry.update(flatten(dic, sep="."))
+        registry.update(flatten(dic, sep="_"))
         database_array.append(registry)
     return database_array
 
@@ -52,7 +52,7 @@ def json_to_csv(output, verbose):
     df.set_index(pd.to_datetime(df.data), inplace=True)
     df.drop(columns="data", inplace=True)
     df.sort_index(inplace=True)
-    taxa_ocupacao = df["leitos_SUS_ocupados"]/df["leitos_SUS_disponiveis"]
+    taxa_ocupacao = df["leitos_SUS_ocupados"] / df["leitos_SUS_disponiveis"]
     df.insert(6, "taxa_ocupacao", taxa_ocupacao)
     if verbose:
         print(f"Salvando {output}")

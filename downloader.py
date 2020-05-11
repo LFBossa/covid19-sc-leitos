@@ -23,8 +23,12 @@ def download_if_inexistent(date):
         return f"Relatório do dia {date_br} já existe"
     else:
         link = get_link_from_isostring(date)
-        urlretrieve(link, filename=caminho)
-        return f"Baixando relatório do dia {date_br}"
+        try:
+            urlretrieve(link, filename=caminho)
+        except:
+            return f"Falha ao baixar relatório do dia {date_br}"
+        else:
+            return f"Baixando relatório do dia {date_br}"
 
 
 @click.command()
