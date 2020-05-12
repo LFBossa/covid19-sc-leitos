@@ -26,7 +26,15 @@ def download_if_inexistent(date):
         try:
             urlretrieve(link, filename=caminho)
         except:
-            return f"Falha ao baixar relatório do dia {date_br}"
+            try:
+                # obrigado governo do estado por colocar o relatório do dia
+                # 29/04 na pasta de maio
+                link = link.replace("2020/04", "2020/05")
+                urlretrieve(link, filename=caminho)
+            except: 
+                return f"Falha ao baixar relatório do dia {date_br}"
+            else:
+                return f"Baixando relatório do dia {date_br}"
         else:
             return f"Baixando relatório do dia {date_br}"
 
