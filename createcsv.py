@@ -56,7 +56,11 @@ def json_to_csv(output, verbose):
     df.insert(6, "taxa_ocupacao", taxa_ocupacao)
     if verbose:
         print(f"Salvando {output}")
-    df.to_csv(output)
+    
+    with open(output, "w") as fl:
+        # um pequeno hack para limpar os inteiros que foram
+        # convertidos para float
+        fl.write(df.to_csv(index=False).replace(".0", ""))
 
 
 if __name__ == "__main__":
