@@ -143,11 +143,11 @@ def get_obitos(texto):
     patt1 = r"óbitos\n(\n(\d+[\.\d{3}]*)\n){3,4}" # obrigado por mudar o padrão DE NOVO
     obitos = extract_2level_regex(patt1, texto)
     if obitos: # Obrigado governo por ter mudado o padrão
-        return obitos[-1]
+        return int(obitos[-1])
     else:
         patt2 = r"casos ativos\n(\n(\d+[\.\d{3}]*)\n){3}"
         obitos = extract_2level_regex(patt2, texto)
-        return obitos[-1]
+        return int(obitos[-1])
 
 
 def get_testes_aguardando(texto):
