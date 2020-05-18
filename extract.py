@@ -124,8 +124,8 @@ def get_leitos_sus(texto):
         return "erro"
 
 
-def get_testes(texto):
-    testes_lacen = extract_regex(r"(\d+[\.\d{3}]*)\n\nexames", texto)
+def get_testes(texto): 
+    testes_lacen = extract_regex(r"(\d+[\.\d{3}]*)[\n]{1,2}exames", texto)
     neg = texto.count("negativo")
     proc = texto.count("processados")
     tipo = "negativos" if neg else "processados"
@@ -140,15 +140,22 @@ def get_confirmados(texto):
 
 
 def get_obitos(texto):
-    patt = r"óbitos\n(\n(\d+[\.\d{3}]*)\n){3}"
-    obitos = extract_2level_regex(patt, texto)
-    return obitos[-1]
+    patt1 = r"óbitos\n(\n(\d+[\.\d{3}]*)\n){3,4}" # obrigado por mudar o padrão DE NOVO
+    obitos = extract_2level_regex(patt1, texto)
+    if obitos: # Obrigado governo por ter mudado o padrão
+        return obitos[-1]
+    else:
+        patt2 = r"casos ativos\n(\n(\d+[\.\d{3}]*)\n){3}"
+        obitos = extract_2level_regex(patt2, texto)
+        return obitos[-1]
 
 
 def get_testes_aguardando(texto):
-    regex = r"(\d+)\n\nexames\naguardando"
-    testes_aguardando = extract_regex(regex, texto)
-    return int(testes_aguardando)
+    # obrigado gobierno
+    regex = r"((\d+)\n){1,2}\nexames\naguardando"
+    testes_aguardando = extract_2level_regex(regex, texto)
+    print(f"aguardando\t{testes_aguardando}")
+    return int(testes_aguardando[0])
 
 
 @click.command()
