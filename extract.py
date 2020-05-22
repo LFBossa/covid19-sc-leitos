@@ -37,7 +37,8 @@ def extract_regex(pattern, text):
     if match:
         # retorna o primeiro grupo de captura
         return match.captures(1)[0]
-
+    else:
+        return None
 
 def captura_internacoes(texto):
     patt = r"Internações\nem UTI\n(\n(\d+)\n){9}"
@@ -110,18 +111,23 @@ def get_uti_data(text):
     return dicionario
 
 
+def parse_int(txt):
+    try:
+        return int(txt)
+    except:
+        return txt
+
 def get_leitos_sus(texto):
-    ocupados = int(extract_regex(r"(\d+)\nocupados", texto))
-    reservados = int(extract_regex(r"(\d+)\nleitos\nreservados", texto))
-    disponiveis = int(extract_regex(r"(\d+)\ndisponíveis", texto))
-    if ocupados + disponiveis == reservados:
-        return {
-            "ocupados": ocupados,
-            "reservados": reservados,
-            "disponiveis": disponiveis,
-        }
-    else:
-        return "erro"
+    regex_dict = {
+        "ocupados": r"(\d+)\nocupados",
+        "reservados": r"(\d+)\nleitos\nreservados",
+        "disponiveis": r"(\d+)\ndisponíveis",
+        "totais": r"(\d+)\nleitos\ntotais",
+        "outras_doencas": r"(\d+)\nocupados( por\noutras|\npor outras)\nenfermidades"
+    }
+    extracted_dict = { key: parse_int(extract_regex(val, texto)) \
+        for (key, val) in regex_dict.items() }     
+    return extracted_dict
 
 
 def get_testes(texto): 
@@ -129,9 +135,16 @@ def get_testes(texto):
     neg = texto.count("negativo")
     proc = texto.count("processados")
     tipo = "negativos" if neg else "processados"
-    testes_lacen = int(testes_lacen.replace(".", ""))
-    print(testes_lacen, tipo)
-    return testes_lacen, tipo
+    rapido = extract_regex(r"(\d+[\.\d{3}]*)\n{2}testes rápidos", texto)
+    testes_lacen = parse_int(testes_lacen.replace(".", ""))
+    if "PCR" in texto:
+        tipo = "PCR"
+        rapido = parse_int(rapido.replace(".", ""))
+        totais = testes_lacen + rapido
+    else:
+        totais = testes_lacen
+
+    return {"totais": totais, "tipo": tipo, "lacen": testes_lacen, "rapido": rapido}
 
 
 def get_confirmados(texto):
@@ -152,10 +165,15 @@ def get_obitos(texto):
 
 def get_testes_aguardando(texto):
     # obrigado gobierno
-    regex = r"((\d+)\n){1,2}\nexames\naguardando"
-    testes_aguardando = extract_2level_regex(regex, texto)
-    print(f"aguardando\t{testes_aguardando}")
-    return int(testes_aguardando[0])
+    patt1 = r"((\d+)\n){1,2}\nexames\naguardando"
+    testes_aguardando = extract_2level_regex(patt1, texto)
+    if testes_aguardando:
+        return int(testes_aguardando[0])
+    else:
+        patt2 = r"exames\n(\d+)\naguardando"
+        testes_aguardando = extract_regex(patt2, texto)
+        return int(testes_aguardando)
+        
 
 
 @click.command()
@@ -165,14 +183,13 @@ def extraction_loop(clear, verbose):
     dicionario = dict_files("./txt/*.txt")
     for caminho, conteudo in dicionario.items():
         confirmados = get_confirmados(conteudo)
-        num_testes, tipo_testes = get_testes(conteudo)
+        dict_testes = get_testes(conteudo)
         aguardando = get_testes_aguardando(conteudo)
         obitos = get_obitos(conteudo)
         conteudo_json = {
             "casos_conf": confirmados,
             "obitos": obitos,
-            "testes": num_testes,
-            "teste_tipo": tipo_testes,
+            "testes": dict_testes,
             "testes_aguardando": aguardando,
         }
         if "Internações" in conteudo:
