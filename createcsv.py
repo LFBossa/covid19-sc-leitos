@@ -60,7 +60,7 @@ def json_to_csv(output, verbose):
     with open(output, "w") as fl:
         # um pequeno hack para limpar os inteiros que foram
         # convertidos para float
-        fl.write(df.to_csv(index=False).replace(".0", ""))
+        fl.write(df.to_csv(index=True).replace(".0", ""))
 
 
 if __name__ == "__main__":
