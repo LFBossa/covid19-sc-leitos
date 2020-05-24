@@ -41,7 +41,7 @@ def extract_regex(pattern, text):
         return None
 
 def captura_internacoes(texto):
-    patt = r"Internações\nem UTI\n(\n(\d+)\n){9}"
+    patt = r"Internações( em\n|\nem )UTI\n(\n(\d+)\n){9}"
     return extract_2level_regex(patt, texto)
 
 
@@ -98,16 +98,20 @@ def get_uti_data(text):
     ]
     dicionario = dict()
     for chave, function in sequencia_extracoes:
-        dados = converte_testa_dados(function(text))
-        if type(dados) == str:
-            # deu ruim
-            return dados
-        else:
-            # deu bom
-            dicionario[chave] = {
-                "conf": {"sus": dados[0], "priv": dados[3], "total": dados[6]},
-                "susp": {"sus": dados[1], "priv": dados[4], "total": dados[7]},
-            }
+        try: 
+            dados = converte_testa_dados(function(text))    
+            if type(dados) == str:
+                # deu ruim
+                return dados
+            else:
+                # deu bom
+                dicionario[chave] = {
+                    "conf": {"sus": dados[0], "priv": dados[3], "total": dados[6]},
+                    "susp": {"sus": dados[1], "priv": dados[4], "total": dados[7]},
+                }
+        except:
+            # inferno de governoooo para de mudar o pdf
+            print(f"Faltam informações de {chave}")
     return dicionario
 
 
