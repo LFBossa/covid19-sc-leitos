@@ -22,21 +22,22 @@ def download_if_inexistent(date):
     if os.path.exists(caminho):
         return f"Relatório do dia {date_br} já existe"
     else:
-        link = get_link_from_isostring(date)
-        try:
-            urlretrieve(link, filename=caminho)
-        except:
+
+        link1 = get_link_from_isostring(date)
+        link2 = link1.replace("2020/04", "2020/05")
+        link3 = link1.replace("boletim", "Boletim") # sim mudaram isso
+        sequencia = [link1, link2, link3]
+        i = 0
+        for link in sequencia:
             try:
-                # obrigado governo do estado por colocar o relatório do dia
-                # 29/04 na pasta de maio
-                link = link.replace("2020/04", "2020/05")
                 urlretrieve(link, filename=caminho)
-            except: 
-                return f"Falha ao baixar relatório do dia {date_br}"
+            except:  
+                i = i + 1
+                print(f"Erro com link{i}")
+                continue                
             else:
                 return f"Baixando relatório do dia {date_br}"
-        else:
-            return f"Baixando relatório do dia {date_br}"
+                
 
 
 @click.command()
