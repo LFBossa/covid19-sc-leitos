@@ -30,6 +30,8 @@ def extract_2level_regex(pattern, text):
     match = regex.search(pattern, text)
     if match:
         return match.captures(2)
+    else:
+        return None
 
 
 def extract_regex(pattern, text):
@@ -136,17 +138,24 @@ def get_leitos_sus(texto):
 
 def get_testes(texto): 
     testes_lacen = extract_regex(r"(\d+[\.\d{3}]*)[\n]{1,2}exames", texto)
-    neg = texto.count("negativo")
-    proc = texto.count("processados")
-    tipo = "negativos" if neg else "processados"
-    rapido = extract_regex(r"(\d+[\.\d{3}]*)\n{2}testes rápidos", texto)
-    testes_lacen = parse_int(testes_lacen.replace(".", ""))
-    if "PCR" in texto:
+    testes_lacen_complex = extract_2level_regex(r"((\d+[\.\d{3}]*)[\n]){2}exames\nPCR", texto)
+    if testes_lacen_complex:
+        print("dia 23 nesse caralho")
+        testes_lacen, rapido = [ parse_int(x.replace(".", "")) for x in testes_lacen_complex ]
         tipo = "PCR"
-        rapido = parse_int(rapido.replace(".", ""))
         totais = testes_lacen + rapido
     else:
-        totais = testes_lacen
+        neg = texto.count("negativo")
+        proc = texto.count("processados")
+        tipo = "negativos" if neg else "processados"
+        rapido = extract_regex(r"(\d+[\.\d{3}]*)\n{2}testes rápidos", texto)
+        testes_lacen = parse_int(testes_lacen.replace(".", ""))
+        if "PCR" in texto:
+            tipo = "PCR"
+            rapido = parse_int(rapido.replace(".", ""))
+            totais = testes_lacen + rapido
+        else:
+            totais = testes_lacen
 
     return {"totais": totais, "tipo": tipo, "lacen": testes_lacen, "rapido": rapido}
 
@@ -169,14 +178,18 @@ def get_obitos(texto):
 
 def get_testes_aguardando(texto):
     # obrigado gobierno
-    patt1 = r"((\d+)\n){1,2}\nexames\naguardando"
-    testes_aguardando = extract_2level_regex(patt1, texto)
-    if testes_aguardando:
-        return int(testes_aguardando[0])
-    else:
-        patt2 = r"exames\n(\d+)\naguardando"
-        testes_aguardando = extract_regex(patt2, texto)
-        return int(testes_aguardando)
+    # 23/05 que inferno
+    patterns_n_functions = [ (r"((\d+)\n){1,2}\nexames\naguardando", extract_2level_regex ),
+     (r"exames\n(\d+)\naguardando", extract_regex),
+     (r"aguardando\n(\d+)\nresultado",extract_regex),
+     (r"aguardando\n(\d+)\(Lacen\)\nresultado",extract_regex)  ]
+    for patt, func in patterns_n_functions:
+        result = func(patt, texto)
+        if result:
+            if type(result) == list:
+                return int(result[0])
+            else:
+                return result 
         
 
 
