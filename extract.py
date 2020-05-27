@@ -139,8 +139,7 @@ def get_leitos_sus(texto):
 def get_testes(texto): 
     testes_lacen = extract_regex(r"(\d+[\.\d{3}]*)[\n]{1,2}exames", texto)
     testes_lacen_complex = extract_2level_regex(r"((\d+[\.\d{3}]*)[\n]){2}exames\nPCR", texto)
-    if testes_lacen_complex:
-        print("dia 23 nesse caralho")
+    if testes_lacen_complex: 
         testes_lacen, rapido = [ parse_int(x.replace(".", "")) for x in testes_lacen_complex ]
         tipo = "PCR"
         totais = testes_lacen + rapido
@@ -156,12 +155,20 @@ def get_testes(texto):
             totais = testes_lacen + rapido
         else:
             totais = testes_lacen
-
+    # sem a menor condições, pqp
+    testes_ = extract_regex(r"(\d+ mil)\(total\)\nprocessados", texto)
+    if testes_:
+        totais = parse_int(float(testes_.replace(" ", "").replace("mil", "e3")))
+        return {"totais": totais}
     return {"totais": totais, "tipo": tipo, "lacen": testes_lacen, "rapido": rapido}
 
 
 def get_confirmados(texto):
-    confirmados = extract_regex(r"(\d+[\.\d{3}]*)\n\ncasos con", texto)
+    if "casos ativos" in texto:
+        array = extract_2level_regex(r"(\n(\d+[\.\d{3}]*)\n){2}\ncasos con", texto)
+        confirmados = array[0]
+    else:
+        confirmados = extract_regex(r"(\d+[\.\d{3}]*)\n\ncasos con", texto)
     return int(confirmados.replace(".", ""))
 
 
@@ -182,7 +189,8 @@ def get_testes_aguardando(texto):
     patterns_n_functions = [ (r"((\d+)\n){1,2}\nexames\naguardando", extract_2level_regex ),
      (r"exames\n(\d+)\naguardando", extract_regex),
      (r"aguardando\n(\d+)\nresultado",extract_regex),
-     (r"aguardando\n(\d+)\(Lacen\)\nresultado",extract_regex)  ]
+     (r"aguardando\n(\d+)\(Lacen\)\nresultado",extract_regex),
+     (r"(\d+)\nexames\n\nexames aguardando", extract_regex ) ]
     for patt, func in patterns_n_functions:
         result = func(patt, texto)
         if result:
