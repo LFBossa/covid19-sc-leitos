@@ -138,7 +138,7 @@ def get_leitos_sus(texto):
 
 def get_testes(texto): 
     testes_lacen = extract_regex(r"(\d+[\.\d{3}]*)[\n]{1,2}exames", texto)
-    testes_lacen_complex = extract_2level_regex(r"((\d+[\.\d{3}]*)[\n]){2}exames\nPCR", texto)
+    testes_lacen_complex = extract_2level_regex(r"((\d+[\.\d{3}]*)[\n]){2}exames", texto)
     if testes_lacen_complex: 
         testes_lacen, rapido = [ parse_int(x.replace(".", "")) for x in testes_lacen_complex ]
         tipo = "PCR"
@@ -158,8 +158,8 @@ def get_testes(texto):
     # sem a menor condições, pqp
     testes_ = extract_regex(r"(\d+ mil)\(total\)\nprocessados", texto)
     if testes_:
-        totais = parse_int(float(testes_.replace(" ", "").replace("mil", "e3")))
-        return {"totais": totais}
+        testes_lacen = parse_int(float(testes_.replace(" ", "").replace("mil", "e3")))
+        return {"lacen": testes_lacen}
     return {"totais": totais, "tipo": tipo, "lacen": testes_lacen, "rapido": rapido}
 
 
