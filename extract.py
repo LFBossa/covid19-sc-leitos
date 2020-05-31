@@ -127,7 +127,7 @@ def get_leitos_sus(texto):
     regex_dict = {
         "ocupados": r"(\d+)\nocupados",
         "reservados": r"(\d+)\nleitos\nreservados",
-        "disponiveis": r"(\d+)\ndisponíveis",
+        "disponiveis": r"(\d+)\n(disponíveis|livres)",
         "totais": r"(\d+)\nleitos\ntotais",
         "outras_doencas": r"(\d+)\nocupados( por\noutras|\npor outras)\nenfermidades"
     }
