@@ -128,7 +128,7 @@ def get_leitos_sus(texto):
         "ocupados": r"(\d+)\nocupados",
         "reservados": r"(\d+)\nleitos\nreservados",
         "disponiveis": r"(\d+)\n(disponíveis|livres)",
-        "totais": r"(\d+)\nleitos\ntotais",
+        "totais": r"(\d+)\nleitos(\n| )totais",
         "outras_doencas": r"(\d+)\nocupados( por\noutras|\npor outras)\nenfermidades"
     }
     extracted_dict = { key: parse_int(extract_regex(val, texto)) \
