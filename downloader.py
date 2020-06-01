@@ -9,9 +9,13 @@ from cli import common_options
 from utils import create_directory
 
 
-def get_link_from_isostring(date):
+def get_links_from_date(date):
+    # O ultimo relatório do mês é publicado no mês seguinte 
     ano, mes, dia = date.isoformat().split("-")
-    return f"https://www.coronavirus.sc.gov.br/wp-content/uploads/{ano}/{mes}/boletim-epidemiologico-{dia}-{mes}-{ano}.pdf"
+    amanha = date + dt.timedelta(1)
+    prox_mes = amanha.isoformat().split("-")[1]
+    template = f"https://www.coronavirus.sc.gov.br/wp-content/uploads/{ano}/{{mes0}}/boletim-epidemiologico-{dia}-{mes}-{ano}.pdf"
+    return template.format(mes0=mes), template.format(mes0=prox_mes)
 
 
 def download_if_inexistent(date):
@@ -23,11 +27,11 @@ def download_if_inexistent(date):
         return f"Relatório do dia {date_br} já existe"
     else:
 
-        link1 = get_link_from_isostring(date)
-        link2 = link1.replace("2020/04", "2020/05")
-        link3 = link1.replace("boletim", "Boletim") # sim mudaram isso
-        sequencia = [link1, link2, link3]
-        i = 0
+        link1, link2 = get_links_from_date(date) 
+        boletim = lambda x: x.replace("boletim", "Boletim") # sim mudaram isso
+        link3, link4 = (boletim(x) for x in [link1, link2])
+        sequencia = [link1, link2, link3, link4]
+        i = 0 
         for link in sequencia:
             try:
                 urlretrieve(link, filename=caminho)
