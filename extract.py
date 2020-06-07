@@ -186,18 +186,19 @@ def get_obitos(texto):
 def get_testes_aguardando(texto):
     # obrigado gobierno
     # 23/05 que inferno
-    patterns_n_functions = [ (r"((\d+)\n){1,2}\nexames\naguardando", extract_2level_regex ),
-     (r"exames\n(\d+)\naguardando", extract_regex),
-     (r"aguardando\n(\d+)\nresultado",extract_regex),
-     (r"aguardando\n(\d+)\(Lacen\)\nresultado",extract_regex),
-     (r"(\d+)\nexames\n\nexames aguardando", extract_regex ) ]
+    patterns_n_functions = [ (r"((\d+[\.\d{3}]*)\n){1,2}\nexames\naguardando", extract_2level_regex ),
+     (r"exames\n(\d+[\.\d{3}]*)\naguardando", extract_regex),
+     (r"aguardando\n(\d+[\.\d{3}]*)\nresultado",extract_regex),
+     (r"aguardando\n(\d+[\.\d{3}]*)\(Lacen\)\nresultado",extract_regex),
+     (r"(\d+[\.\d{3}]*)\nexames\n\nexames aguardando", extract_regex ) ]
     for patt, func in patterns_n_functions:
         result = func(patt, texto)
         if result:
             if type(result) == list:
-                return int(result[0])
+                retorno = result[0].replace(".", "")
+                return int(retorno)
             else:
-                return result 
+                return int(result.replace(".", ""))
         
 
 
