@@ -42,6 +42,7 @@ def extract_regex(pattern, text):
     else:
         return None
 
+
 def captura_internacoes(texto):
     patt = r"Internações( em\n|\nem )UTI\n(\n(\d+)\n){9}"
     return extract_2level_regex(patt, texto)
@@ -70,7 +71,8 @@ def converte_testa_dados(array):
      """
     arrn = [int(x) for x in array]
     # testamos se a soma das categorias correspondentes está correta
-    teste_colunas = [arrn[0 + x] + arrn[3 + x] == arrn[6 + x] for x in range(3)]
+    teste_colunas = [arrn[0 + x] + arrn[3 + x] == arrn[6 + x]
+                     for x in range(3)]
     # testamos se a soma em cada subcategoria está correta
     teste_subcolunas = [
         arrn[3 * x + 0] + arrn[3 * x + 1] == arrn[3 * x + 2] for x in range(3)
@@ -100,8 +102,8 @@ def get_uti_data(text):
     ]
     dicionario = dict()
     for chave, function in sequencia_extracoes:
-        try: 
-            dados = converte_testa_dados(function(text))    
+        try:
+            dados = converte_testa_dados(function(text))
             if type(dados) == str:
                 # deu ruim
                 return dados
@@ -123,6 +125,7 @@ def parse_int(txt):
     except:
         return txt
 
+
 def get_leitos_sus(texto):
     regex_dict = {
         "ocupados": r"(\d+)\nocupados",
@@ -131,23 +134,34 @@ def get_leitos_sus(texto):
         "totais": r"(\d+)\nleitos(\n| )totais",
         "outras_doencas": r"(\d+)\nocupados( por\noutras|\npor outras)\nenfermidades"
     }
-    extracted_dict = { key: parse_int(extract_regex(val, texto)) \
-        for (key, val) in regex_dict.items() }     
+    extracted_dict = {key: parse_int(extract_regex(val, texto))
+                      for (key, val) in regex_dict.items()}
     return extracted_dict
 
 
-def get_testes(texto): 
+def get_testes(texto):
     testes_lacen = extract_regex(r"(\d+[\.\d{3}]*)[\n]{1,2}exames", texto)
-    testes_lacen_complex = extract_2level_regex(r"((\d+[\.\d{3}]*)[\n]){2}exames", texto)
-    if testes_lacen_complex: 
-        testes_lacen, rapido = [ parse_int(x.replace(".", "")) for x in testes_lacen_complex ]
+    testes_lacen_complex = extract_2level_regex(
+        r"((\d+[\.\d{3}]*)[\n]){2}exames", texto)
+
+    if "TESTES REALIZADOS" in texto:
+        tipo = "PCR"
+        testes_lacen = extract_regex(r"(\d+[\.\d{3}]*)\nPCR", texto)
+        rapido = extract_regex(r"(\d+[\.\d{3}]*)\ntestes\nrápidos", texto)
+        testes_lacen = int(testes_lacen.replace(".",""))
+        rapido = int(rapido.replace(".",""))
+        totais = testes_lacen + rapido 
+    elif testes_lacen_complex:
+        testes_lacen, rapido = [
+            parse_int(x.replace(".", "")) for x in testes_lacen_complex]
         tipo = "PCR"
         totais = testes_lacen + rapido
     else:
         neg = texto.count("negativo")
         proc = texto.count("processados")
         tipo = "negativos" if neg else "processados"
-        rapido = extract_regex(r"(\d+[\.\d{3}]*)\n{2}testes rápidos", texto)
+        rapido = extract_regex(
+            r"(\d+[\.\d{3}]*)\n{1,2}testes( |\n)rápidos", texto)
         testes_lacen = parse_int(testes_lacen.replace(".", ""))
         if "PCR" in texto:
             tipo = "PCR"
@@ -158,14 +172,21 @@ def get_testes(texto):
     # sem a menor condições, pqp
     testes_ = extract_regex(r"(\d+ mil)\(total\)\nprocessados", texto)
     if testes_:
-        testes_lacen = parse_int(float(testes_.replace(" ", "").replace("mil", "e3")))
+        testes_lacen = parse_int(
+            float(testes_.replace(" ", "").replace("mil", "e3")))
         return {"lacen": testes_lacen}
     return {"totais": totais, "tipo": tipo, "lacen": testes_lacen, "rapido": rapido}
 
 
 def get_confirmados(texto):
-    if "casos ativos" in texto:
-        array = extract_2level_regex(r"(\n(\d+[\.\d{3}]*)\n){2}\ncasos con", texto)
+    if "casos por 100 mil/hab" in texto: # condição para 06/06
+        patt = r"(\n(\d+[\.\d{3}]*)\n){2}\n\d+,\d+\n\ncasos con"
+        array = extract_2level_regex(patt, texto)
+        if array:
+            confirmados = array[0]
+    elif "casos ativos" in texto:
+        array = extract_2level_regex(
+            r"(\n(\d+[\.\d{3}]*)\n){2}\ncasos con", texto)
         confirmados = array[0]
     else:
         confirmados = extract_regex(r"(\d+[\.\d{3}]*)\n\ncasos con", texto)
@@ -173,24 +194,27 @@ def get_confirmados(texto):
 
 
 def get_obitos(texto):
-    patt1 = r"óbitos\n(\n(\d+[\.\d{3}]*)\n){3,4}" # obrigado por mudar o padrão DE NOVO
-    obitos = extract_2level_regex(patt1, texto)
-    if obitos: # Obrigado governo por ter mudado o padrão
-        return int(obitos[-1])
-    else:
-        patt2 = r"casos ativos\n(\n(\d+[\.\d{3}]*)\n){3}"
-        obitos = extract_2level_regex(patt2, texto)
-        return int(obitos[-1])
+    patterns = [r"óbitos\n(\n(\d+[\.\d{3}]*)\n){3,4}",  # obrigado por mudar o padrão DE NOVO
+                r"casos ativos\n(\n(\d+[\.\d{3}]*)\n){3}",
+                r"(\n(\d+[\.\d{3}]*)\n){2}\n\d,\d{2}%\n\nóbitos"]
+    obitos = [extract_2level_regex(x, texto) for x in patterns]
+    posicoes = [-1, -1, 0]
+    for obito, i in zip(obitos, posicoes):
+        if obito:  # Obrigado governo por ter mudado o padrão
+            retorno = obito[i].replace(".", "")
+            return int(retorno)
 
 
 def get_testes_aguardando(texto):
     # obrigado gobierno
     # 23/05 que inferno
-    patterns_n_functions = [ (r"((\d+[\.\d{3}]*)\n){1,2}\nexames\naguardando", extract_2level_regex ),
-     (r"exames\n(\d+[\.\d{3}]*)\naguardando", extract_regex),
-     (r"aguardando\n(\d+[\.\d{3}]*)\nresultado",extract_regex),
-     (r"aguardando\n(\d+[\.\d{3}]*)\(Lacen\)\nresultado",extract_regex),
-     (r"(\d+[\.\d{3}]*)\nexames\n\nexames aguardando", extract_regex ) ]
+    patterns_n_functions = [
+        (r"(\d+[\.\d{3}]*)[\n]{1,2}exames aguardando", extract_regex),
+        (r"((\d+[\.\d{3}]*)\n){1,2}\nexames\naguardando", extract_2level_regex),
+        (r"exames\n(\d+[\.\d{3}]*)\naguardando", extract_regex),
+        (r"aguardando\n(\d+[\.\d{3}]*)\nresultado", extract_regex),
+        (r"aguardando\n(\d+[\.\d{3}]*)\(Lacen\)\nresultado", extract_regex),
+        (r"(\d+[\.\d{3}]*)\nexames\n\nexames aguardando", extract_regex)]
     for patt, func in patterns_n_functions:
         result = func(patt, texto)
         if result:
@@ -199,7 +223,6 @@ def get_testes_aguardando(texto):
                 return int(retorno)
             else:
                 return int(result.replace(".", ""))
-        
 
 
 @click.command()
@@ -220,11 +243,13 @@ def extraction_loop(clear, verbose):
         }
         if "Internações" in conteudo:
             conteudo_json.update(
-                {"leitos_SUS": get_leitos_sus(conteudo), "UTI": get_uti_data(conteudo),}
+                {"leitos_SUS": get_leitos_sus(
+                    conteudo), "UTI": get_uti_data(conteudo), }
             )
         json_path = caminho.replace("txt", "json", 2)
         if verbose:
-            print(f"Encontrados dados em {caminho}. Extraindo para {json_path}")
+            print(
+                f"Encontrados dados em {caminho}. Extraindo para {json_path}")
         with open(json_path, "w") as fp:
             json.dump(conteudo_json, fp, ensure_ascii=False, indent=2)
 
