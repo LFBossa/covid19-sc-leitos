@@ -179,7 +179,7 @@ def get_testes(texto):
 
 
 def get_confirmados(texto):
-    if "casos por 100 mil/hab" in texto: # condição para 06/06
+    if "casos por 100 mil" in texto: # condição para 06/06
         patt = r"(\n(\d+[\.\d{3}]*)\n){2}\n\d+,\d+\n\ncasos con"
         array = extract_2level_regex(patt, texto)
         if array:
