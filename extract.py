@@ -180,10 +180,14 @@ def get_testes(texto):
 
 def get_confirmados(texto):
     if "casos por 100 mil" in texto: # condição para 06/06
-        patt = r"((\d+[\.\d{3}]*)\n{2}){2}\d+,\d+\n\ncasos con"
-        array = extract_2level_regex(patt, texto)
-        if array:
-            confirmados = array[0]
+        patt1 = r"((\d+[\.\d{3}]*)\n{2}){2}\d+,\d+\n\ncasos con"
+        patt2 = r"(\n(\d+[\.\d{3}]*)\n){2}\ncasos con"
+        array1 = extract_2level_regex(patt1, texto)
+        array2 = extract_2level_regex(patt2, texto)
+        if array1:
+            confirmados = array1[0]
+        elif array2:
+            confirmados = array2[0]
     elif "casos ativos" in texto:
         array = extract_2level_regex(
             r"(\n(\d+[\.\d{3}]*)\n){2}\ncasos con", texto)
