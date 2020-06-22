@@ -1,6 +1,6 @@
 import os
 from glob import glob
-from os.path import getmtime
+from os.path import getmtime, exists
 
 import click
 
@@ -15,10 +15,14 @@ def convert_loop(clear, verbose):
     lista_pdfs = sorted(glob("./pdf/*.pdf"), key=getmtime)
     for arquivo in lista_pdfs:
         txt_path = arquivo.replace("pdf", "txt", 2)
-        comando = f"pdftotext {arquivo} {txt_path}"
-        if verbose:
-            print(f"Convertendo {arquivo}")
-        os.system(comando)
+        if exists(txt_path):
+            if verbose:
+                print(f"{txt_path} já existe")
+        else:
+            comando = f"pdftotext {arquivo} {txt_path}"
+            if verbose:
+                print(f"Convertendo {arquivo}")
+            os.system(comando)
 
 
 if __name__ == "__main__":
