@@ -200,9 +200,10 @@ def get_confirmados(texto):
 def get_obitos(texto):
     patterns = [r"óbitos\n(\n(\d+[\.\d{3}]*)\n){3,4}",  # obrigado por mudar o padrão DE NOVO
                 r"casos ativos\n(\n(\d+[\.\d{3}]*)\n){3}",
-                r"(\n(\d+[\.\d{3}]*)\n){2}\n\d,\d{2}%\n\nóbitos"]
+                r"(\n(\d+[\.\d{3}]*)\n){2}\n\d,\d{2}%\n\nóbitos",
+                r"(\n(\d+[\.\d{3}]*)\n){2}\nóbitos"] # adicionado 20/06
     obitos = [extract_2level_regex(x, texto) for x in patterns]
-    posicoes = [-1, -1, 0]
+    posicoes = [-1, -1, 0, 0]
     for obito, i in zip(obitos, posicoes):
         if obito:  # Obrigado governo por ter mudado o padrão
             retorno = obito[i].replace(".", "")
