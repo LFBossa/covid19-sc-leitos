@@ -51,7 +51,7 @@ def download_loop(clear, verbose):
 
     INICIO = dt.date(2020, 4, 14)
     numero_dias = (INICIO.today() - INICIO).days
-    for n in range(numero_dias):
+    for n in range(numero_dias + 1):
         data = INICIO + dt.timedelta(n)
         msg = download_if_inexistent(data)
         if verbose:
