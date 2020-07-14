@@ -52,8 +52,10 @@ def json_to_csv(output, verbose):
     df.set_index(pd.to_datetime(df.data), inplace=True)
     df.drop(columns="data", inplace=True)
     df.sort_index(inplace=True)
-    taxa_ocupacao = df["leitos_SUS_ocupados"] / df["leitos_SUS_disponiveis"]
-    df.insert(6, "taxa_ocupacao", taxa_ocupacao)
+    ocupacao = df["leitos_SUS_ocupados"] + df["leitos_SUS_outras_doencas"]
+    disponibilidade = df[["leitos_SUS_reservados", "leitos_SUS_totais"]].fillna(0).apply(lambda x: max(x), axis=1)
+    taxa_ocupacao = ocupacao / disponibilidade
+    df.insert(7, "taxa_ocupacao", taxa_ocupacao)
     if verbose:
         print(f"Salvando {output}")
     
