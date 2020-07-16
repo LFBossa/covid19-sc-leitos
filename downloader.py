@@ -29,8 +29,11 @@ def download_if_inexistent(date):
 
         link1, link2 = get_links_from_date(date) 
         boletim = lambda x: x.replace("boletim", "Boletim") # sim mudaram isso
+        traco1 = lambda x: x.replace(".pdf", "-1.pdf")
         link3, link4 = (boletim(x) for x in [link1, link2])
-        sequencia = [link1, link2, link3, link4]
+        sequencia = [link1, link2, link3, link4] 
+        links_ruins = [traco1(x) for x in sequencia]
+        sequencia.extend( links_ruins )
         i = 0 
         for link in sequencia:
             try:
